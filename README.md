@@ -27,3 +27,29 @@ The off-the-shelf components for building and testing swerve-drive system are li
 | Converting Cable(Molex-TTL)   | ROBOT CABLE-X3P   | 1      |
 | Communication Calbe(TTL)      | ROBOT CABLE-X3P   | 2      |
   
+  
+## How to use
+1. Clone this repository to your catkin workspace,  
+```
+$ cd catkin_ws/src
+$ git clone https://github.com/james-yoo/swerve_drive.git
+```
+  
+2. Compile the source,  
+```
+$ cd ~/catkin_ws
+$ catkin_make
+$ source devel/setup.bash
+```
+  
+3. Launch the swerve_drive_control node,  
+```
+$ roslaunch swerve_drive swerve_drive_control.launch
+```
+  
+4. Open the new terminal and start teleop_twist_keybord script,
+```
+$ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+```
+  
+5. Control with twist keybord command.
