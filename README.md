@@ -12,9 +12,9 @@ A swerve drive is a special type of drivetrain used in FRC (FIRST Robotics Compe
 - Maximum pushing force
 - Either steered gearboxes or concentric drive
   
-## Video
-   
-
+## Video  
+[![Swerve drive ros](http://img.youtube.com/vi/aw8DVg23Epk/0.jpg)](https://youtu.be/aw8DVg23Epk)  
+  
 ## BOM (Build of Materials)
 The off-the-shelf components for building and testing swerve-drive system are listed below. You can also download 2D/3D models from 'model' folder.  
 
