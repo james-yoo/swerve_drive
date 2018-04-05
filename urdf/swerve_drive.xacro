@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" 
+    xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+  xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+  xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+    name="swerve_drive">
+
+    <link name="swerve_base_link" />    
+
+    <joint name="swerve_base_joint" type="fixed">
+      <parent link="swerve_base_link"/>
+      <child link="xl430_steer"/>  
+      <origin xyz="0 0 0"/>
+    </joint>
+
+    <link name="xl430_steer">
+      <visual>
+        <origin rpy="0 ${pi} ${pi}" xyz="0 0 0.018"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/XL430.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="0 ${pi} ${pi}" xyz="0 0 0.018"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/XL430.dae"/>
+        </geometry>      
+      </collision>
+    </link>
+
+    <joint name="steer" type="revolute">
+      <parent link="xl430_steer"/>
+      <child link="xl430_bracket"/>
+      <origin rpy="0 0 0" xyz="0 -0.0003 -0.0435"/>
+      <axis xyz="0 0 -1" />    
+      <limit effort="300" velocity="0.1" lower="-1.57" upper="1.57"/>    
+    </joint>
+
+    <link name="xl430_bracket">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 -0.001 0"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/XL430_BRACKET.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 -0.001 0"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/XL430_BRACKET.dae"/>
+        </geometry>      
+      </collision>
+    </link>
+
+    <joint name="bracket2drive" type="fixed">
+      <parent link="xl430_bracket"/>
+      <child link="xl430_drive"/>
+      <origin xyz="0 0 0"/>
+      <axis xyz="0 1 0" />        
+    </joint>
+
+    <link name="xl430_drive">
+      <visual>
+        <origin rpy="${pi/2} ${pi} 0" xyz="0 0.018 0.0"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/XL430.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="${pi/2} ${pi} 0" xyz="0 0.018 0.0"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/XL430.dae"/>
+        </geometry>      
+      </collision>
+    </link>
+
+    <joint name="drive" type="continuous">
+      <parent link="xl430_drive"/>
+      <child link="tb3_wheel"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 -1 0" />        
+    </joint>
+
+    <link name="tb3_wheel">
+      <visual>
+        <origin rpy="0 0 ${pi}" xyz="0 -0.01 0"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/TB3_WHEEL.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="0 0 ${pi}" xyz="0 -0.01 0"/>
+        <geometry>
+          <mesh filename="package://swerve_drive/mesh/TB3_WHEEL.dae"/>
+        </geometry>      
+      </collision>
+    </link>
+
+</robot>

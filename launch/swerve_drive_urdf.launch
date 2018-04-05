@@ -4,10 +4,12 @@
     <param name="robot_description" textfile="$(find swerve_drive)/urdf/swerve_drive.urdf" />
 
     <!-- Setting gui parameter to true for display joint slider -->
-    <param name="use_gui" value="true"/>
+    <param name="use_gui" value="false"/>
     
     <!-- Starting Joint state publisher node which will publish the joint values -->
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <rosparam param="source_list">["swerve_drive/joint_states"]</rosparam>
+    </node>
     
     <!-- Starting robot state publish which will publish tf -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />

@@ -26,6 +26,7 @@
 
 #include <dynamixel_workbench_toolbox/dynamixel_workbench.h>
 #include <dynamixel_workbench_msgs/DynamixelStateList.h>
+#include <sensor_msgs/JointState.h>
 #include <geometry_msgs/Twist.h>
 
 class SwerveDriveControl
@@ -38,6 +39,7 @@ class SwerveDriveControl
 
   // ROS Topic Publisher
   ros::Publisher dynamixel_state_list_pub_;
+  ros::Publisher joint_state_list_pub_;
 
   // ROS Topic Subscriber
   ros::Subscriber twist_msgs_sub_;
@@ -62,7 +64,7 @@ class SwerveDriveControl
 
   void initPublisher();
   void initSubscriber();
-  void dynamixelStatePublish();
+  void jointStatePublish();
 
   void swervedriveTwistMsgCallback(const geometry_msgs::Twist::ConstPtr& msg); 
 };

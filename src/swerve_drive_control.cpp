@@ -57,7 +57,6 @@ SwerveDriveControl::SwerveDriveControl()
 
   initPublisher();
   initSubscriber();
-  //initServer();
 }
 
 SwerveDriveControl::~SwerveDriveControl()
@@ -86,7 +85,7 @@ void SwerveDriveControl::initMsg()
 
 void SwerveDriveControl::initPublisher()
 {
-  dynamixel_state_list_pub_ = node_handle_.advertise<dynamixel_workbench_msgs::DynamixelStateList>("dynamixel_state", 10);
+  joint_state_list_pub_ = node_handle_.advertise<sensor_msgs::JointState>("swerve_drive/joint_states", 10);
 }
 
 void SwerveDriveControl::initSubscriber()
@@ -94,30 +93,38 @@ void SwerveDriveControl::initSubscriber()
   twist_msgs_sub_ = node_handle_.subscribe("/cmd_vel", 10, &SwerveDriveControl::swervedriveTwistMsgCallback, this);
 }
 
-void SwerveDriveControl::dynamixelStatePublish()
+void SwerveDriveControl::jointStatePublish()
 {
-  dynamixel_workbench_msgs::DynamixelState     dynamixel_state[dxl_cnt_];
-  dynamixel_workbench_msgs::DynamixelStateList dynamixel_state_list;
+  sensor_msgs::JointState message;
+  message.header.stamp = ros::Time::now();
+
+  float position_radian = 0.0f;
+  float velocity_radian = 0.0f;
 
   for (int index = 0; index < dxl_cnt_; index++)
   {
-    dynamixel_state[index].model_name          = std::string(dxl_wb_->getModelName(dxl_id_[index]));
-    dynamixel_state[index].id                  = dxl_id_[index];
-    dynamixel_state[index].torque_enable       = dxl_wb_->itemRead(dxl_id_[index], "Torque_Enable");
-    dynamixel_state[index].present_position    = dxl_wb_->itemRead(dxl_id_[index], "Present_Position");
-    dynamixel_state[index].present_velocity    = dxl_wb_->itemRead(dxl_id_[index], "Present_Velocity");
-    dynamixel_state[index].goal_position       = dxl_wb_->itemRead(dxl_id_[index], "Goal_Position");
-    dynamixel_state[index].goal_velocity       = dxl_wb_->itemRead(dxl_id_[index], "Goal_Velocity");
-    dynamixel_state[index].moving              = dxl_wb_->itemRead(dxl_id_[index], "Moving");
+    if( dxl_id_[index] == 1){
+      message.name.push_back( "drive" );
+    }
+    else if( dxl_id_[index] == 2){
+      message.name.push_back( "steer" );
+    }
+    else{
+    message.name.push_back( std::string(dxl_wb_->getModelName(dxl_id_[index])) );
+    }
 
-    dynamixel_state_list.dynamixel_state.push_back(dynamixel_state[index]);
+    position_radian = dxl_wb_->convertValue2Radian(dxl_id_[index],dxl_wb_->itemRead(dxl_id_[index], "Present_Position") );
+    velocity_radian = dxl_wb_->convertValue2Velocity(dxl_id_[index],dxl_wb_->itemRead(dxl_id_[index], "Present_Velocity") );
+    message.position.push_back( position_radian );
+    message.velocity.push_back( velocity_radian );
   }
-  dynamixel_state_list_pub_.publish(dynamixel_state_list);
+
+  joint_state_list_pub_.publish(message);
 }
 
 void SwerveDriveControl::controlLoop()
 {
-  dynamixelStatePublish();
+  jointStatePublish();
 }
 
 void SwerveDriveControl::swervedriveTwistMsgCallback(const geometry_msgs::Twist::ConstPtr& msg)
@@ -127,12 +134,12 @@ void SwerveDriveControl::swervedriveTwistMsgCallback(const geometry_msgs::Twist:
   //linx = msg.linear.x;      angZ = msg.angular.z;
 
   static int32_t goal_velocity[2] = {0, 0};
-
-  goal_velocity[0] = dxl_wb_->convertVelocity2Value(dxl_id_[0], msg->linear.x);
+  float position_radian = 0.0f;
+ 
+  goal_velocity[0] = dxl_wb_->convertVelocity2Value(dxl_id_[0], (-1) * msg->linear.x);
   goal_velocity[1] = dxl_wb_->convertVelocity2Value(dxl_id_[1], (-1) * msg->angular.z);
-
+  
   bool ret = dxl_wb_->syncWrite("Goal_Velocity", goal_velocity);
-
 }
 
 int main(int argc, char **argv)
@@ -141,7 +148,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "swervedrive_control");
   SwerveDriveControl swerve_ctrl;
 
-  ros::Rate loop_rate(200);
+  ros::Rate loop_rate(100);
 
   while (ros::ok())
   {
