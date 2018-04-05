@@ -52,4 +52,14 @@ $ roslaunch swerve_drive swerve_drive_control.launch
 $ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 ```
   
-5. Control with twist keybord command.
+5. Control with twist keybord command:  
+- 'i' = forward
+- ',' = backward
+- 'j' = left turn
+- 'l' = right turn
+  
+6. (Optional) To visualize swerve_drive in Rviz, open the new terminal,
+```
+$ roslaunch swerve_drive swerve_drive_urdf.launch
+```
+  
