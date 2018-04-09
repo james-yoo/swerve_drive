@@ -16,7 +16,7 @@ A swerve drive is a special type of drivetrain used in FRC (FIRST Robotics Compe
 [![Swerve drive ros](http://img.youtube.com/vi/aw8DVg23Epk/0.jpg)](https://youtu.be/aw8DVg23Epk)  
   
 ## BOM (Build of Materials)
-The off-the-shelf components for building and testing swerve-drive system are listed below. You can also download 2D/3D models from 'model' folder.  
+The off-the-shelf components for building and testing swerve-drive system are listed below. You can also download bracket (.stl) file for 3d printing from 'models' folder.  
 
 | Parts                         | Model             | Qty    |
 |-------------------------------|-------------------|--------|
@@ -28,7 +28,23 @@ The off-the-shelf components for building and testing swerve-drive system are li
 | Communication Calbe(TTL)      | ROBOT CABLE-X3P   | 2      |
   
   
-## How to use
+## How to use  
+This work was tested under ROS Kinetic(desktop-full installation) + Ubuntu Xenial(16.04)  
+  
+### Wiring & motor configure
+Motor's ID should be set as described picture below. You can set motor ID via [dynamixel_workbench](https://github.com/ROBOTIS-GIT/dynamixel-workbench/tree/master/dynamixel_workbench_single_manager)(Linux) or [R+ Manager 2.0](http://emanual.robotis.com/docs/en/software/rplus2/manager/)(Windows)
+![wiring](https://user-images.githubusercontent.com/23667624/38525760-75d6b8dc-3c8e-11e8-80f0-17de58b6ce12.png)   
+  
+### Prerequisites
+Following packages should be installed.
+```
+$ sudo apt-get install ros-kinetic-dynamixel-sdk
+$ sudo apt-get install ros-kinetic-qt-build
+$ sudo apt-get install ros-kinetic-dynamixel-workbench
+$ sudo apt-get install ros-kinetic-dynamixel-workbench-msgs
+```  
+  
+### Download & compile the source
 1. Clone this repository to your catkin workspace,  
 ```
 $ cd catkin_ws/src
